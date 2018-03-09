@@ -1,0 +1,12 @@
+var socket = io('/mon-espace-de-nom');
+	  socket.on('bonjour',function(data){
+	       elmP.innerHTML = data;
+	  });
+
+
+
+var socket = io();
+      socket.on('connectAlaChambre',function(data){
+          document.body.innerHTML = '';
+          document.write(data);
+      });

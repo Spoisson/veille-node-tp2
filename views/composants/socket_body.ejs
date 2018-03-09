@@ -17,7 +17,14 @@ Pour établir une communication socket il faut un premier appel de
  console.log('Le socket id = ' + socket.id); 
  /* l'événement ackUser a été transmis par le serveur */ 
  socket.on('ackUser', function(data){
- console.log('data en provenance du serveur = ' + data.user)
+ 	console.log('data en provenance du serveur = ' + data.user)
+
+ 		var nouvelUtilisateur = document.createElement("div");
+ 		nouvelUtilisateur.innerHTML = data.user;
+ 		console.log(data.user);
+ 		document.getElementById("enregistrement").appendChild(nouvelUtilisateur);
+
+
  })
  });
  }
@@ -29,4 +36,9 @@ Pour établir une communication socket il faut un premier appel de
  */
  socket.emit('setUser', {user : elmUser.value})
  }
+
+
+
+
+
 </script>

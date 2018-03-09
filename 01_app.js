@@ -6,9 +6,9 @@ const util = require("util");
 
 var app = express();
 
-var server = require('http').createServer(app);
+const server = http.Server(app);
 
-var io = require('socket.io')(server);
+const io = require('./mes_modules/chat_socket').listen(server);
 
 //io.on('connection', function(){ /* … */ });
 //server.listen(3000);
@@ -44,13 +44,6 @@ MongoClient.connect('mongodb://127.0.0.1:27017', (err, database) => {
  console.log('connexion à la BD et on écoute sur le port ' + port)
  })
 })
-
-
-var nsp = io.of('/mon-espace-de-nom');
-nsp.on('connection', function(socket){
-  console.log('une connexion');
-  nsp.emit('bonjour', 'Bonjour tout le monde!');
-});
 
 
 /*
@@ -184,12 +177,12 @@ app.get('/chat',(req, res) => {
 
 
 	io.on('connection', function(socket){
-	console.log(socket.id)
-	socket.on('setUser', function(data){
-	   console.log('setUser')
-	   console.log(data.user)
-	   socket.emit('ackUser', data)
-	   })
+		//console.log(socket.id)
+		socket.on('setUser', function(data){
+	   		//console.log('setUser')
+	  		//console.log(data.user)
+	  		//socket.emit('ackUser', data)
+	   	})
 	}); // une connexion socket
 	let message = "Chat socket"
 	res.render('socket_vue.ejs', {message : message})

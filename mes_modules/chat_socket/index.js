@@ -16,10 +16,20 @@ module.exports.listen = function(server){
 
 		  		console.log("objUtilisateur: " + objUtilisateur[data.user]);
 
-
-		  		socket.emit('ackUser', data);
+		  		socket.emit('ackUser', objUtilisateur);
 
 		})
+
+        socket.on('envoyerMessage', function(data){
+                console.log(data.message);
+
+                //objUtilisateur[data.message] = data.message;
+
+               // console.log("objUtilisateur: " + objUtilisateur[data.message]);
+                
+                socket.emit('afficherMessage', data.message);
+
+        })
 
    	})
  return io

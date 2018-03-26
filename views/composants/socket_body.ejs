@@ -3,8 +3,16 @@
  <input type="text">
  <button onclick="enregistrement()">Enregistrement</button>
 </section>
+
+<section id="listeMembres">
+</section>
+
+<section id="clavardage" style="display:none;justify-content: flex-end;">
+ <input type="text">
+ <button onclick="envoyerMessage()">Envoyer</button>
+</section>
 <script type="text/javascript">
- /* 
+/* 
 Pour établir une communication socket il faut un premier appel de
  la fonction io()
  Cette fonction est incluse dans la librairie socket.io. 
@@ -17,15 +25,45 @@ Pour établir une communication socket il faut un premier appel de
  console.log('Le socket id = ' + socket.id); 
  /* l'événement ackUser a été transmis par le serveur */ 
  socket.on('ackUser', function(data){
- 	console.log('data en provenance du serveur = ' + data.user)
+ 	console.log('data en provenance du serveur = ' + data)
+
+ 	console.log(data);
+
+ 	for (membre in data){
 
  		var nouvelUtilisateur = document.createElement("div");
- 		nouvelUtilisateur.innerHTML = data.user;
- 		console.log(data.user);
+ 		nouvelUtilisateur.innerHTML = membre;
+ 		console.log(membre);
+ 		document.getElementById("listeMembres").appendChild(nouvelUtilisateur);
+
+ 	}
+
+ 	document.querySelector("#enregistrement").style.display = "none";
+ 	document.querySelector("#clavardage").style.display = "flex";
+ })
+
+  socket.on('afficherMessage', function(data){
+ 	console.log('data en provenance du serveur = ' + data)
+ 	console.log(data);
+/*
+ 	for (membre in data){
+
+ 		var nouvelUtilisateur = document.createElement("div");
+ 		nouvelUtilisateur.innerHTML = membre;
+ 		console.log(membre);
  		document.getElementById("enregistrement").appendChild(nouvelUtilisateur);
 
+ 	}
+*/
+
+	var nouveauMessage = document.createElement("div");
+ 	nouveauMessage.innerHTML = data;
+
+	document.getElementById("clavardage").appendChild(nouveauMessage);
 
  })
+
+
  });
  }
 /* ---------------------------------------------------------- */
@@ -37,8 +75,13 @@ Pour établir une communication socket il faut un premier appel de
  socket.emit('setUser', {user : elmUser.value})
  }
 
-
-
+ function envoyerMessage(){
+ var elmMessage = document.querySelector('#clavardage input')
+ console.log(elmMessage.value)
+ /* l'événement « setUser » est transmit avec un objet 
+ */
+ socket.emit('envoyerMessage', {message : elmMessage.value})
+ }
 
 
 </script>

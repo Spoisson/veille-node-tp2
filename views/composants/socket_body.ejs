@@ -7,11 +7,15 @@
 <section id="listeMembres">
 </section>
 
+<section id="discussionConteneur" style="display:flex;justify-content: flex-start;background-color:grey;flex-direction: column; min-height: 100px;width:50%;margin: 5% auto;">
+</section>
+
 <section id="clavardage" style="display:none;justify-content: flex-end;">
  <input type="text">
  <button onclick="envoyerMessage()">Envoyer</button>
 </section>
 <script type="text/javascript">
+
 /* 
 Pour établir une communication socket il faut un premier appel de
  la fonction io()
@@ -42,24 +46,12 @@ Pour établir une communication socket il faut un premier appel de
  	document.querySelector("#clavardage").style.display = "flex";
  })
 
-  socket.on('afficherMessage', function(data){
+   socket.on('broadcast', function(data){
  	console.log('data en provenance du serveur = ' + data)
  	console.log(data);
-/*
- 	for (membre in data){
-
- 		var nouvelUtilisateur = document.createElement("div");
- 		nouvelUtilisateur.innerHTML = membre;
- 		console.log(membre);
- 		document.getElementById("enregistrement").appendChild(nouvelUtilisateur);
-
- 	}
-*/
-
-	var nouveauMessage = document.createElement("div");
+ 	var nouveauMessage = document.createElement("div");
  	nouveauMessage.innerHTML = data;
-
-	document.getElementById("clavardage").appendChild(nouveauMessage);
+ 	document.getElementById("discussionConteneur").appendChild(nouveauMessage);
 
  })
 

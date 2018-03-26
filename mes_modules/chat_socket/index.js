@@ -27,7 +27,7 @@ module.exports.listen = function(server){
 
                // console.log("objUtilisateur: " + objUtilisateur[data.message]);
                 
-                socket.emit('afficherMessage', data.message);
+                io.local.emit('broadcast', data.message);
 
         })
 

@@ -1,4 +1,4 @@
-<h2><%= message %></h2>
+<h2>Liste des membres</h2>
 <section id="enregistrement">
  <input type="text">
  <button onclick="enregistrement()">Enregistrement</button>
@@ -7,11 +7,12 @@
 <section id="listeMembres">
 </section>
 
-<section id="discussionConteneur" style="display:flex;justify-content: flex-start;background-color:grey;flex-direction: column; min-height: 100px;width:50%;margin: 5% auto;">
+<h1>Chat discussion</h1>
+<section id="discussionConteneur" style="">
 </section>
 
-<section id="clavardage" style="display:none;justify-content: flex-end;">
- <input type="text">
+<section id="clavardage" style="">
+ <textarea rows="4" cols="50"></textarea>
  <button onclick="envoyerMessage()">Envoyer</button>
 </section>
 <script type="text/javascript">
@@ -34,7 +35,7 @@ Pour établir une communication socket il faut un premier appel de
  	console.log(data);
 
  	document.getElementById("listeMembres").innerHTML='';
- 	
+
  	for (membre in data){
 
  		var nouvelUtilisateur = document.createElement("div");
@@ -70,7 +71,7 @@ Pour établir une communication socket il faut un premier appel de
  }
 
  function envoyerMessage(){
- var elmMessage = document.querySelector('#clavardage input')
+ var elmMessage = document.querySelector('#clavardage textarea')
  console.log(elmMessage.value)
  /* l'événement « setUser » est transmit avec un objet 
  */

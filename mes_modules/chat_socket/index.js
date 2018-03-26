@@ -16,7 +16,7 @@ module.exports.listen = function(server){
 
 		  		console.log("objUtilisateur: " + objUtilisateur[data.user]);
 
-		  		socket.emit('ackUser', objUtilisateur);
+		  		io.local.emit('ackUser', objUtilisateur);
 
 		})
 

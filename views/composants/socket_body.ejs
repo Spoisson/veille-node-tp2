@@ -33,6 +33,8 @@ Pour établir une communication socket il faut un premier appel de
 
  	console.log(data);
 
+ 	document.getElementById("listeMembres").innerHTML='';
+ 	
  	for (membre in data){
 
  		var nouvelUtilisateur = document.createElement("div");
@@ -73,6 +75,7 @@ Pour établir une communication socket il faut un premier appel de
  /* l'événement « setUser » est transmit avec un objet 
  */
  socket.emit('envoyerMessage', {message : elmMessage.value})
+ elmMessage.value = '';
  }
 
 

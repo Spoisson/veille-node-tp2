@@ -2,10 +2,16 @@
 	"courriel": "Email",
 	"accueil": "Home",
 	"vider": "Empty",
+	"clavardage": "Chat",
 	"adresses": "Addresses",
 	"identifiant": "Identifier",
 	"nom": "Last Name",
 	"prenom": "First Name",
-	"telephone": "Phone"
+	"telephone": "Phone",
+	"accueilTitre" : "TP1 - Members management",
+	"accueilCours" : "Class : Programmation and technological development",
+	"accueilRemise" : "Date of delivery : February 14th 2018",
+	"accueilProjet" : "This project is using Node.js, Express and MongoDB to develop a web application for members management",
+	"enteteProjet" : "Project: Veille Node.js"
 
 }

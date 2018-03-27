@@ -2,9 +2,15 @@
 	"courriel": "Courriel",
 	"accueil": "Accueil",
 	"vider": "Vider",
+	"clavardage": "Clavardage",
 	"adresses": "Adresses",
 	"identifiant": "Identifiant",
 	"nom": "Nom",
 	"prenom": "Prénom",
-	"telephone": "Téléphone"
+	"telephone": "Téléphone",
+	"accueilTitre" : "TP1 - Gestion de membre",
+	"accueilCours" : "Cours : Programmation et veille technologique",
+	"accueilRemise" : "Remise : 14 février 2018",
+	"accueilProjet" : "Projet utilisant Node.js, Express et MongoDB pour développer une application Web de gestion de membres",
+	"enteteProjet" : "Projet: Veille Node.js"
 }

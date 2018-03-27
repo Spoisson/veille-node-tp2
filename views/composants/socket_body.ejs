@@ -25,18 +25,18 @@ Pour établir une communication socket il faut un premier appel de
  */
  window.onload = ()=>{
  socket = io()
- console.log(socket.id);
+ //console.log(socket.id);
  socket.on('connect', function(){
- console.log('Le socket id = ' + socket.id); 
+ //console.log('Le socket id = ' + socket.id); 
  /* l'événement ackUser a été transmis par le serveur */ 
 
  let couleurChoisie;
 
  socket.on('ackUser', function(data){
 
- 	console.log('data en provenance du serveur = ' + data)
+ 	//console.log('data en provenance du serveur = ' + data)
 
- 	console.log(data);
+ 	//console.log(data);
 
  	document.getElementById("listeMembres").innerHTML='';
 
@@ -44,7 +44,7 @@ Pour établir une communication socket il faut un premier appel de
 
  		var nouvelUtilisateur = document.createElement("div");
  		nouvelUtilisateur.innerHTML = data[membre];
- 		console.log(data[membre]);
+ 		//console.log(data[membre]);
  		document.getElementById("listeMembres").appendChild(nouvelUtilisateur);
 
  	}
@@ -54,8 +54,8 @@ Pour établir une communication socket il faut un premier appel de
  })
 
    socket.on('broadcast', function(data, couleurChat){
- 	console.log('data en provenance du serveur = ' + data)
- 	console.log(data);
+ 	//console.log('data en provenance du serveur = ' + data)
+ 	//console.log(data);
  	var nouveauMessage = document.createElement("div");
  	nouveauMessage.style.backgroundColor = couleurChat;
  	nouveauMessage.innerHTML = data;
@@ -69,7 +69,7 @@ Pour établir une communication socket il faut un premier appel de
 /* ---------------------------------------------------------- */
  function enregistrement(){
  var elmUser = document.querySelector('#enregistrement input')
- console.log(elmUser.value)
+ //console.log(elmUser.value)
  /* l'événement « setUser » est transmit avec un objet 
  */
  socket.emit('setUser', {user : elmUser.value, id: socket.id})
@@ -77,7 +77,7 @@ Pour établir une communication socket il faut un premier appel de
 
  function envoyerMessage(){
  var elmMessage = document.querySelector('#clavardage textarea')
- console.log(elmMessage.value)
+ //console.log(elmMessage.value)
  /* l'événement « setUser » est transmit avec un objet 
  */
  socket.emit('envoyerMessage', {message : elmMessage.value, id: socket.id})

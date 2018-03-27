@@ -20,24 +20,334 @@
         <th><a href="/trier/nom/<%= objOrdre.nom %>">Nom<i class="fas fa-<%= (objOrdre.nom=='asc'?'sort-up': 'sort-down') %>"></i></a></th>
         <th><a href="/trier/prenom/<%= objOrdre.prenom %>">Prenom<i class="fas fa-<%= (objOrdre.prenom=='asc'?'sort-up': 'sort-down') %>"></i></a></th>        
         <th><a href="/trier/telephone/<%= objOrdre.telephone %>">Téléphone<i class="fas fa-<%= (objOrdre.telephone=='asc'?'sort-up': 'sort-down') %>"></i></a></th>  
-        <th><a href="/trier/courriel/<%= objOrdre.courriel %>">Courriel<i class="fas fa-<%= (objOrdre.courriel=='asc'?'sort-up': 'sort-down') %>"></i></a></th>      
+        <th><a href="/trier/courriel/<%= objOrdre.courriel %>">Courriel<i class="fas fa-<%= (objOrdre.courriel=='asc'?'sort-up': 'sort-down') %>"></i></a></th>
+        <th></th> 
+        <th><a class='ajouter' href="#"><i class="fas fa-plus-circle"></i></a></th> 
     </tr>
     <%  for (elm of adresses) {%>
     <tr>
-        <td><%= elm._id %></td>
+        <td id="<%= elm._id %>"><%= elm._id %></td>
         <td contenteditable='true'><%= elm.nom %></td>
         <td contenteditable='true'><%= elm.prenom %></td>
         <td contenteditable='true'><%= elm.telephone %></td>                
         <td contenteditable='true'><%= elm.courriel %></td>    
-        <td><a class="detruire" href="/detruire/<%= elm._id %>"><i class="fas fa-trash-alt" aria-hidden="true"></i></a></td>
+        <td><a class="detruire" href="#"><i class="fas fa-trash-alt" aria-hidden="true"></i></a></td>
         <td><a class='modifier' href="#"><i class="far fa-save" aria-hidden="true"></i></a></td>
     </tr>
     <% } %>
 </table>
 
-
+<!--button id='testAJAX'>test AJAX</button-->
 
 <script type="text/javascript">
+
+// dans notre fichier .ejs
+// Notre code JavaScript pour effectuer un transfert AJAX
+/*
+let elmBouton = document.getElementById('testAJAX')
+elmBouton.addEventListener('click', ()=>{
+console.log('ok')
+xhr = new XMLHttpRequest();
+xhr.open('POST', "/ajax_modifier", true);
+data = {
+"nom" : "AAAA",
+"prenom" : "BBBB",
+"telephone" : "CCCC",
+"_id" : "5a90b2322f4e2c0164a7a664"
+}
+console.log(data)
+sData = JSON.stringify(data);
+xhr.setRequestHeader('Content-type', 'application/json');
+xhr.send(sData);
+xhr.addEventListener("readystatechange", traiterRequest, false);
+})
+*/
+// Dans notre fichier .ejs
+// Pour traiter le résultat transmis par l'application serveur 
+
+function traiterRequestModifier(e)
+{
+    //console.log("xhr.readyState = " + xhr.readyState)
+   // console.log("xhr.status = " + xhr.status)
+    if(xhr.readyState == 4 && xhr.status == 200)
+    {
+        //console.log('ajax fonctionne')
+        let  maReponse = JSON.parse(xhr.responseText);
+        //console.log(xhr.responseText);
+        //console.log(maReponse);
+    }
+}
+
+function traiterRequestSupprimer(e)
+{
+    //console.log("xhr.readyState = " + xhr.readyState)
+   // console.log("xhr.status = " + xhr.status)
+    if(xhr.readyState == 4 && xhr.status == 200)
+    {
+        //console.log('ajax fonctionne')
+        let  maReponse = JSON.parse(xhr.responseText);
+        //console.log(xhr.responseText);
+        //console.log(maReponse);
+        document.getElementById(maReponse).parentElement.remove();
+    }
+}
+
+function traiterRequestAjouter(e)
+{
+    //console.log("xhr.readyState = " + xhr.readyState)
+   // console.log("xhr.status = " + xhr.status)
+    if(xhr.readyState == 4 && xhr.status == 200)
+    {
+        console.log('ajax fonctionne')
+       //let  maReponse = JSON.parse(xhr.responseText);
+        console.log(xhr.responseText);
+
+    ////console.log('ajax fonctionne')
+        let  maReponse = JSON.parse(xhr.responseText);
+       
+        let formulaire =  document.querySelector('.tableau tbody');
+        console.log(formulaire);
+
+        //let membreLigne = document.querySelector('tr:nth-child(2)').cloneNode(true);
+       // membreLigne.querySelectorAll('td').innerText = "";
+        //console.log(membreLigne);
+
+        let membreLigne;
+        let contenant = document.createElement("tr");
+
+
+        let contenantID = document.createElement("td");//
+        contenantID.setAttribute('id', maReponse);
+        contenantID.innerHTML = maReponse;
+        console.log(contenantID);
+
+
+        let contenantEditable = document.createElement("td");//
+        contenantEditable.setAttribute('contenteditable', 'true');
+        console.log(contenantEditable);
+
+
+
+        let contenantSupprimer = document.createElement("td");//
+
+        let aSupprimer = document.createElement("a");//
+        aSupprimer.setAttribute('class', 'detruire');
+        aSupprimer.setAttribute('href', '#');
+
+
+        aSupprimer.addEventListener('click', function(){
+
+                //console.log(this.parentElement);
+
+                let elmTr = this.parentElement.parentElement 
+                let _id = elmTr.querySelector('td:nth-child(1)').innerHTML
+
+                //console.log('ok')
+                xhr = new XMLHttpRequest();
+                xhr.open('POST', "/ajax_detruire", true);
+                data = {
+
+                    "_id" : _id
+
+                }
+
+                //console.log(data)
+                sData = JSON.stringify(data);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(sData);
+                xhr.addEventListener("readystatechange", traiterRequestSupprimer, false);
+
+        })
+
+
+        //<td><a class='modifier' href="#"><i class="far fa-save" aria-hidden="true">
+
+        let iSupprimer = document.createElement("i");//
+        iSupprimer.setAttribute('class', 'fas fa-trash-alt');
+        iSupprimer.setAttribute('aria-hidden', 'true');
+
+        aSupprimer.appendChild(iSupprimer);
+        contenantSupprimer.appendChild(aSupprimer);
+
+
+
+
+
+
+
+
+
+        let contenantModifier = document.createElement("td");//
+
+        let aModifier = document.createElement("a");//
+        aModifier.setAttribute('class', 'modifier');
+        aModifier.setAttribute('href', '#');
+
+        aModifier.addEventListener('click', function(){
+
+                //console.log(this.parentElement);
+
+                let elmTr = this.parentElement.parentElement 
+                let _id = elmTr.querySelector('td:nth-child(1)').innerHTML
+                let nom = elmTr.querySelector('td:nth-child(2)').innerHTML
+                let prenom = elmTr.querySelector('td:nth-child(3)').innerHTML
+                let telephone = elmTr.querySelector('td:nth-child(4)').innerHTML
+                let courriel = elmTr.querySelector('td:nth-child(5)').innerHTML
+
+
+                //console.log('ok')
+                xhr = new XMLHttpRequest();
+                xhr.open('POST', "/ajax_modifier", true);
+                data = {
+                    "nom" : nom,
+                    "prenom" : prenom,
+                    "telephone" : telephone,
+                    "_id" : _id
+
+                }
+
+                //console.log(data)
+                sData = JSON.stringify(data);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(sData);
+                xhr.addEventListener("readystatechange", traiterRequestModifier, false);
+
+        })
+
+
+
+        let iModifier = document.createElement("i");//
+        iModifier.setAttribute('class', 'far fa-save');
+        iModifier.setAttribute('aria-hidden', 'true');
+
+        aModifier.appendChild(iModifier);
+        contenantModifier.appendChild(aModifier);
+
+
+        contenant.appendChild(contenantID);
+        contenant.appendChild(contenantEditable.cloneNode(true));
+        contenant.appendChild(contenantEditable.cloneNode(true));
+        contenant.appendChild(contenantEditable.cloneNode(true));
+        contenant.appendChild(contenantEditable.cloneNode(true));
+        contenant.appendChild(contenantSupprimer);
+        contenant.appendChild(contenantModifier);
+
+
+
+        formulaire.appendChild(contenant);
+
+
+
+
+        //class="detruire" href="#"
+        console.log(contenant);
+
+       // document.querySelector('.tableau tbody').appendChild(membreLigne);
+
+
+    }
+}
+
+
+    let elmModifier = document.querySelectorAll('.modifier')
+    //console.log(elmModifier.length)
+    for (elm of elmModifier)
+        {
+
+            elm.addEventListener('click', function(){
+
+                //console.log(this.parentElement);
+
+                let elmTr = this.parentElement.parentElement 
+                let _id = elmTr.querySelector('td:nth-child(1)').innerHTML
+                let nom = elmTr.querySelector('td:nth-child(2)').innerHTML
+                let prenom = elmTr.querySelector('td:nth-child(3)').innerHTML
+                let telephone = elmTr.querySelector('td:nth-child(4)').innerHTML
+                let courriel = elmTr.querySelector('td:nth-child(5)').innerHTML
+
+
+                //console.log('ok')
+                xhr = new XMLHttpRequest();
+                xhr.open('POST', "/ajax_modifier", true);
+                data = {
+                    "nom" : nom,
+                    "prenom" : prenom,
+                    "telephone" : telephone,
+                    "_id" : _id
+
+                }
+
+                //console.log(data)
+                sData = JSON.stringify(data);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(sData);
+                xhr.addEventListener("readystatechange", traiterRequestModifier, false);
+
+            })
+
+        }
+
+
+    let elmDetruire = document.querySelectorAll('.detruire')
+    //console.log(elmDetruire.length)
+    for (elm of elmDetruire)
+        {
+
+            elm.addEventListener('click', function(){
+
+                //console.log(this.parentElement);
+
+                let elmTr = this.parentElement.parentElement 
+                let _id = elmTr.querySelector('td:nth-child(1)').innerHTML
+
+                //console.log('ok')
+                xhr = new XMLHttpRequest();
+                xhr.open('POST', "/ajax_detruire", true);
+                data = {
+
+                    "_id" : _id
+
+                }
+
+                //console.log(data)
+                sData = JSON.stringify(data);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(sData);
+                xhr.addEventListener("readystatechange", traiterRequestSupprimer, false);
+
+            })
+
+        }
+
+
+
+    let elmAjouter = document.querySelector('.ajouter')
+    //console.log(elmDetruire.length)
+
+    elmAjouter.addEventListener('click', function(){
+
+        //console.log(this.parentElement);
+
+        let elmTr = this.parentElement.parentElement 
+
+        //console.log('ok')
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', "/ajax_ajouter", true);
+
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+        xhr.addEventListener("readystatechange", traiterRequestAjouter, false);
+
+
+    })
+
+        
+
+
+
+/*
+
+
     let elmModifier = document.querySelectorAll('.modifier')
     console.log(elmModifier.length)
     for (elm of elmModifier)
@@ -62,7 +372,7 @@
             })
         }
 
-
+*/
 
 </script>
 

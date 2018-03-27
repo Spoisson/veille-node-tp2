@@ -13,16 +13,16 @@ module.exports.listen = function(server){
     let tableauCouleur = ['#b3ffb3', '#b3d6ff', '#beb3ff', '#fdb3ff', '#ffb3be', '#ceffb3', 
         '#f8ffb3', '#ffeab3', '#ffceb3', '#ffb3b3']; 
     io.on('connection', function(socket){
-    	console.log("socket.id" + socket.id)
+    	//console.log("socket.id" + socket.id)
     	// .......
 
 	    socket.on('setUser', function(data){
-		  		console.log(data.user);
+		  		//console.log(data.user);
 
 		  		objUtilisateur[data.id] = data.user;
 
-		  		console.log("objUtilisateur: " + objUtilisateur[data.id]);
-                console.log()
+		  		//console.log("objUtilisateur: " + objUtilisateur[data.id]);
+                //console.log()
 
                 let indexCouleur = Math.floor(Math.random() * tableauCouleur.length);
                 couleurChat = tableauCouleur[indexCouleur];
@@ -36,7 +36,7 @@ module.exports.listen = function(server){
 		})
 
         socket.on('envoyerMessage', function(data){
-                console.log(data.message);
+                //console.log(data.message);
 
                 couleurChat = objCouleur[data.id + "couleur"];
 

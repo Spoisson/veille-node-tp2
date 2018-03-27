@@ -4,7 +4,7 @@ const fs = require('fs')
 const util = require("util");
 
 
-var app = express();
+const app = express();
 
 const server = http.Server(app);
 
@@ -21,7 +21,22 @@ const peupler = require('./mes_modules/peupler')
 const bodyParser= require('body-parser')
 const MongoClient = require('mongodb').MongoClient // le pilote MongoDB
 const ObjectID = require('mongodb').ObjectID;
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
+
+const i18n = require('i18n');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+
+i18n.configure({ 
+   locales : ['fr', 'en'],
+   cookie : 'langueChoisie', 
+   directory : __dirname + '/locales' })
+
+app.use(i18n.init);
+
 /* on associe le moteur de vue au module «ejs» */
 
 
@@ -59,6 +74,44 @@ app.get('/', function (req, res) {
  
   });
 
+
+
+//////////////////////////////////////////
+app.get('/:local(en|fr)', function (req, res) {
+
+	//console.log(req.params.local);
+	res.cookie('langueChoisie' , req.params.local);
+	res.setLocale(req.params.local);
+	//console.log(res.__('courriel'));
+
+ 	res.render('accueil.ejs');
+
+ //res.render('accueil.ejs')  
+ 
+  });
+
+
+
+
+//////////////////////////////////////////
+app.get('/', function (req, res) {
+
+ 	//console.log("req.cookies.langueChoisie = " + req.cookies.langueChoisie);
+ 	if(req.cookies.langueChoisie){
+
+ 		res.setLocale(req.cookies.langueChoisie);
+
+ 	}
+
+ 	//res.setLocale(req.cookies.langueChoisie);
+ 	//console.log(res.__('courriel'));
+ 	//console.log(langueEnCours);
+ 	res.render('accueil.ejs');
+ 
+  });
+
+
+
 //////////////////////////////////////////  Route Adresse
 app.get('/adresse', function (req, res) {
    var cursor = db.collection('adresse')
@@ -69,24 +122,7 @@ app.get('/adresse', function (req, res) {
 })
 //////////////////////////////////////////  Route Rechercher
 app.post('/rechercher',  (req, res) => {
-   let recherche = req.body.recherche.toLowerCase()
-   let regRecherche = new RegExp(recherche, 'i')
-   var match = regRecherche.exec(recherche);
-	console.log("match[0] = " + match[0]); 
-	console.log("match[1] = " + match[1]); 
 
-   console.log(recherche)
-   let cursor = db.collection('adresse')
-                .find({$or: [ 
-                				{nom: {$regex :regRecherche, $options: "$i"}},
-                			  {prenom: {$regex :regRecherche, $options: "$i"}},
-                			 	{telephone: {$regex :regRecherche, $options: "$i"}},
-                				{courriel: {$regex :regRecherche, $options: "$i"}}
-                			]
-                		}).toArray(function(err, resultat){
- if (err) return console.log(err)        
- res.render('adresse.ejs', {adresses: resultat, recherche:recherche})   
-  });
 })
 ////////////////////////////////////////// Route /ajouter
 app.post('/ajouter', (req, res) => {
@@ -118,11 +154,11 @@ app.get('/detruire/:id', (req, res) => {
  // console.log('util = ' + util.inspect(req.params));	
  var id = req.params.id
  console.log(id)
- db.collection('adresse')
- .findOneAndDelete({"_id": ObjectID(req.params.id)}, (err, resultat) => {
+ db.collection('adresse').findOneAndDelete({"_id": ObjectID(req.params.id)}, (err, resultat) => {
 
-if (err) return console.log(err)
- res.redirect('/adresse')  // redirige vers la route qui affiche la collection
+	if (err) return console.log(err)
+	res.redirect('/adresse')  // redirige vers la route qui affiche la collection
+
  })
 })
 
@@ -139,27 +175,7 @@ app.get('/trier/:cle/:ordre', (req, res) => {
 })
 
 }) 
-/////////////////////////////////////////////////////////  Route /peupler
-app.get('/peupler', (req, res) => {
-	let collectionMembre = peupler()
-	/*
-	for (elm of tabMembre)
-	{
-	let cursor = db.collection('adresse').save(elm, (err, res)=>{
-		if(err) console.error(err)
-			console.log('ok')
 
-		})
-	}
-	*/
-
-	let cursor = db.collection('adresse').insertMany(collectionMembre, (err, resultat)=>{
-		if(err) console.error(err)
-			// console.log('ok')
-			// console.log(util.inspect(resultat))
-			res.redirect('/adresse')
-		})
-})
 
 /////////////////////////////////////////////////////////  Route /peupler
 app.get('/vider', (req, res) => {
@@ -171,6 +187,67 @@ app.get('/vider', (req, res) => {
 		})
 	res.redirect('/adresse')
 })
+
+
+app.post('/ajax_modifier', (req,res) => {
+
+	//console.log('route /ajax_modifier')
+	// console.log('util = ' + util.inspect(req.body));
+	req.body._id = 	ObjectID(req.body._id)
+	//console.log('req.body._id = ' + req.body._id)
+	//console.log(req.body);
+ 	db.collection('adresse').save(req.body, (err, result) => {
+
+		if (err) return console.log(err)
+		//console.log('sauvegarder dans la BD')
+		//console.log(res);
+		//console.log(res.send);
+		res.send(JSON.stringify(req.body))
+
+	})
+
+})
+
+app.post('/ajax_detruire', (req,res) => {
+
+	//console.log('route /ajax_modifier')
+	// console.log('util = ' + util.inspect(req.body));
+	req.body._id = 	ObjectID(req.body._id)
+	//console.log('req.body._id = ' + req.body._id)
+	//console.log(req.body);
+
+
+	db.collection('adresse').findOneAndDelete({"_id": req.body._id}, (err, resultat) => {
+
+		if (err) return console.log(err)
+		//console.log('retiré de la BD')
+		//console.log(JSON.stringify(req.body));
+		//res.send(JSON.stringify(req.body))
+		res.send(req.body._id);
+		//res.redirect('/adresse')
+		//res.redirect('#')  // redirige vers la route qui affiche la collection
+
+ 	})
+
+})
+
+
+
+app.post('/ajax_ajouter', (req,res) => {
+
+	console.log('route /ajouter')	
+	 db.collection('adresse').save(req.body, (err, result) => {
+	 if (err) return console.log(err)
+	 // console.log(req.body)	
+	 //console.log(result.ops[0]._id)
+	 res.send(result.ops[0]._id);
+	//res.redirect('/adresse')
+
+	 })
+
+})
+
+
 
 
 app.get('/chat',(req, res) => {

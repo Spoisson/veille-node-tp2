@@ -8,10 +8,10 @@
 </section>
 
 <h1>Chat discussion</h1>
-<section id="discussionConteneur" style="">
+<section id="discussionConteneur">
 </section>
 
-<section id="clavardage" style="">
+<section id="clavardage">
  <textarea rows="4" cols="50"></textarea>
  <button onclick="envoyerMessage()">Envoyer</button>
 </section>
@@ -29,7 +29,11 @@ Pour établir une communication socket il faut un premier appel de
  socket.on('connect', function(){
  console.log('Le socket id = ' + socket.id); 
  /* l'événement ackUser a été transmis par le serveur */ 
+
+ let couleurChoisie;
+
  socket.on('ackUser', function(data){
+
  	console.log('data en provenance du serveur = ' + data)
 
  	console.log(data);
@@ -39,8 +43,8 @@ Pour établir une communication socket il faut un premier appel de
  	for (membre in data){
 
  		var nouvelUtilisateur = document.createElement("div");
- 		nouvelUtilisateur.innerHTML = membre;
- 		console.log(membre);
+ 		nouvelUtilisateur.innerHTML = data[membre];
+ 		console.log(data[membre]);
  		document.getElementById("listeMembres").appendChild(nouvelUtilisateur);
 
  	}
@@ -49,10 +53,11 @@ Pour établir une communication socket il faut un premier appel de
  	document.querySelector("#clavardage").style.display = "flex";
  })
 
-   socket.on('broadcast', function(data){
+   socket.on('broadcast', function(data, couleurChat){
  	console.log('data en provenance du serveur = ' + data)
  	console.log(data);
  	var nouveauMessage = document.createElement("div");
+ 	nouveauMessage.style.backgroundColor = couleurChat;
  	nouveauMessage.innerHTML = data;
  	document.getElementById("discussionConteneur").appendChild(nouveauMessage);
 
@@ -67,7 +72,7 @@ Pour établir une communication socket il faut un premier appel de
  console.log(elmUser.value)
  /* l'événement « setUser » est transmit avec un objet 
  */
- socket.emit('setUser', {user : elmUser.value})
+ socket.emit('setUser', {user : elmUser.value, id: socket.id})
  }
 
  function envoyerMessage(){
@@ -75,7 +80,7 @@ Pour établir une communication socket il faut un premier appel de
  console.log(elmMessage.value)
  /* l'événement « setUser » est transmit avec un objet 
  */
- socket.emit('envoyerMessage', {message : elmMessage.value})
+ socket.emit('envoyerMessage', {message : elmMessage.value, id: socket.id})
  elmMessage.value = '';
  }
 

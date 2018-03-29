@@ -1,10 +1,76 @@
 
 @import "variables.less"; 
 
+@noir: #000000;
+@blanc: #ffffff;
+@couleurArriereChamps: #d7ca7c;
+@couleurArriereChamps2: #fff5b9;
+@couleurTitresMembre: #000000;
+
 body {
 	display : flex;
 	flex-direction: column;
 	font-family: 'Roboto', sans-serif;
+
+	h1.profilMembre {
+
+		color: @noir;
+		margin: 0 auto;
+		margin-top: 4%;
+		margin-bottom: 2%;
+		font-size: 2.5em;
+		border-bottom: 1px solid @noir;
+		width: 30%;
+		text-align: center;
+
+
+	}
+
+	div.ficheMembre {
+
+		//border-top: 1px solid @couleurTitresMembre;
+		//border-bottom: 1px solid @couleurTitresMembre;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		height: 15vh;
+		align-items: flex-end;
+		margin-bottom: 100px;
+
+		div.titreChamps {
+
+			background-color: @couleurArriereChamps2;
+			width: 15%;
+			border-bottom: 1px solid @couleurTitresMembre;
+			h1 {
+
+				padding-top: 2%;
+				padding-bottom: 2%;
+				font-size: 1.1em;
+				background-color: @couleurArriereChamps;
+				margin: 0 auto;
+				color: @noir;
+				text-align: center;
+
+			}
+
+			div {
+
+				color: @couleurTitresMembre;
+
+				height: 50px;
+				font-size: 1.5em;
+				//border-bottom: 1px solid @couleurTitresMembre;
+				margin: 0 auto;
+				text-align: center;
+				padding-top: 20px;
+
+			}
+
+		}
+
+	}
+
 }
 
 .global {

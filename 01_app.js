@@ -274,3 +274,18 @@ io.on('connection', function(socket){ // l'écouteur général
 });
 */
 
+app.get('/profil/:id', (req, res) => {
+
+	 var id = req.params.id
+	 const ObjectID = require('mongodb').ObjectID;
+	 console.log(id)
+	 db.collection('adresse')
+	 .findOne({"_id": ObjectID(req.params.id)}, (err, resultat) => {
+	if (err) return console.log(err)
+		console.log(resultat);
+	  res.render('profilMembre.ejs', {adresses: resultat})  // redirige vers la route qui affiche la collection
+	 })
+
+})
+
+
